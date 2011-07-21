@@ -1,0 +1,54 @@
+<?php
+// $Id$
+/**
+ * @file
+ * Main module file for the Weibo Share Button
+ */
+
+/**
+ * Implements hook_perm().
+ * Permissions for Weibo Sharebutton
+ */
+function weibo_sharebutton_perm() {
+  $perms[] = 'administer weibo sharebutton';
+  $perms[] = 'view weibo sharebutton';
+  return $perms;
+}
+
+
+/**
+ * Implements hook_menu().
+ */
+function weibo_sharebutton_menu() {
+	  $items['admin/settings/weibo-sharebutton'] = array(
+	    'title'            => 'Weibo Share Button',
+	    'description'      => 'Configure Weibo Share Button settings',
+	    'page callback'    => 'drupal_get_form',
+	    'page arguments'   => array('weibo_sharebutton_admin_settings'),
+	    'access arguments' => array('administer weibo sharebutton'),
+	    'file'             => 'weibo_sharebutton.admin.inc',
+	  );
+	  return $items;
+	}
+
+/**
+ * Implements hook_theme().
+ */
+/**
+function weibo_sharebutton_theme() {
+  return array(
+    'weibo_sharebutton_button' => array(
+      'arguments' => array(
+        'node' => NULL,
+        'url' => NULL,
+        'css' => '',
+        'size' => '',
+        'syntax' => 'g:plusone',
+        'count' => 0
+      ),
+    )
+  );
+}
+*/
+
+
