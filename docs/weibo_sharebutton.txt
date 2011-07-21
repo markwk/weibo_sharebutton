@@ -1,0 +1,25 @@
+Weibo Share Button / 分享按钮 
+Drupal 6 Module Implementation
+============================
+http://open.weibo.com/sharebutton
+=============================
+Features: 
+1.) Basic Share Button via Sina Microblogging (新浪微博)
+
+=============================
+Issues / Future Development:
+
+
+
+
+
+
+=============================
+NOTES
+Translation of Key Words:
+选择样式 = Choose Style
+按钮 = Button 
+图标 = icon
+选择大小 = Choose Size
+复制这段代码，粘贴到你的网站上任意位置。
+= Copy and paste this code anywhere in your site. 

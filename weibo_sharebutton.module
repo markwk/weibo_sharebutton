@@ -34,7 +34,6 @@ function weibo_sharebutton_menu() {
 /**
  * Implements hook_theme().
  */
-/**
 function weibo_sharebutton_theme() {
   return array(
     'weibo_sharebutton_button' => array(
@@ -43,12 +42,204 @@ function weibo_sharebutton_theme() {
         'url' => NULL,
         'css' => '',
         'size' => '',
-        'syntax' => 'g:plusone',
-        'count' => 0
+        'icontype' => '',
+        'count' => 0,
+		'syntax' => 'weibosharescript',
       ),
     )
   );
 }
-*/
+
+/**
+ * Implements hook_nodeapi().
+ */
+function weibo_sharebutton_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+
+  if ($op === 'view'
+    && in_array($node->type, variable_get('weibo_sharebutton_node_types', array()), TRUE)
+    && user_access('view weibo sharebutton')
+    && $node->build_mode === NODE_BUILD_NORMAL) {
+
+    $locations = variable_get('weibo_sharebutton_node_location', array('full'));
+    $view_mode = $a3 ? 'teaser' : 'full';
+    $show_on_teasers = variable_get('weibo_sharebutton_showonteasers', 0);
+
+    if (in_array($view_mode, $locations, TRUE)) {
+      $default = array(
+        'count' => 0,
+        'size' => '1',  // standard
+        'css' => 'margin: 0 1em 1em 1em;float:right',
+        'icontype' => 'icon',
+		'syntax' => 'weibosharescript',
+      );
+      $button_settings = variable_get('weibo_sharebutton_button_settings', $default) + array('node' => $node);
+      $node->content['weibo_sharebutton'] = array(
+        '#weight'  => variable_get('weibo_sharebutton_weight', -5),
+        '#value'   => theme('weibo_sharebutton_button', $button_settings),
+      );
+    }
+  }
+}
+
+/**
+ * Implements hook_link().
+ * Add a button tag to the link section of the node (teaser or full node).
+ */
+function weibo_sharebutton_link($type, $node = NULL, $teaser = FALSE) {
+  $links = array();
+  $view_mode = $teaser ? 'teaser' : 'full';
+  $locations = variable_get('weibo_sharebutton_node_location', array('full'));
+  if (in_array('link', $locations, TRUE)
+    && $type === 'node'
+    && in_array($node->type, variable_get('weibo_sharebutton_node_types', array()), TRUE)
+    && user_access('view weibo sharebutton')) {
+
+    $default = array(
+      'count' => 0,
+      'size' => '',  // standard
+      'css' => 'margin: 0 1em 1em 1em;float:right;',
+      'icontype' => 'icon',
+	  'syntax' => 'weibosharescript',
+    );
+
+    $button_settings = variable_get('weibo_sharebutton_button_settings', $default) + array('node' => $node);
+    $links['weibo_sharebutton'] = array(
+      'title' => theme('weibo_sharebutton_button', $button_settings),
+      'html' => TRUE,
+    );
+  }
+  return $links;
+}
+
+
+/**
+ * Returns HTML for the Weibo Share button.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - url: (optional) An absolute URL to use in the button.
+ *   - object: (optional) The node object. (Only will be use its nid)
+ *   - size:  (optional) A string 'small', 'medium', 'standard', 'tall'
+ *   - count: (optional) A integer 0 or 1 (0 default will not print aggregated counting
+ *   - css: (optional) A string with inline CSS rules for the wrapper.
+ *
+ * @ingroup themeable
+ */
+function theme_weibo_sharebutton_button($variables) {
+	$weibo_buttontype = 1;
+	$weibo_count = '1';
+	
+	$output = "<script type=\"text/javascript\" charset=\"utf-8\"> \n";
+	$output .= "(function(){ \n";
+	$output .= "var param = { \n";
+	$output .= "url:location.href, \n";
+	$output .= "type:'$weibo_buttontype', \n";
+	$output .= "count:'$weibo_count', \n";
+	$output .= "rnd:new Date().valueOf() \n";
+	$output .= "} \n";
+	$output .= "var temp = []; \n";
+	$output .= "for( var p in param ){ \n";
+	$output .= "temp.push(p + '=' + encodeURIComponent( param[p] || '' ) ) \n";
+	$output .= "} \n";
+	$output .= "document.write('<iframe allowTransparency=\"true\" frameborder=\"0\" scrolling=\"no\" src=\"http://hits.sinajs.cn/A1/weiboshare.html?' + temp.join('&') + '\" width=\"90\" height=\"70\"></iframe>') \n";
+	$output .= "})() \n";		
+	$output .= "</script>";	
+
+  return $output;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+
+function weibo_sharebutton_block($op = 'list', $delta = 0, $edit = array()) {
+  $default = array(
+	'icontype' => 'icon',
+    'url' => '',
+    'count' => 0,
+    'size' => '1',  // standard
+    'css' => 'text-align:center;',
+  );
+	
+	switch ($op) {
+		case 'list': 
+		$blocks[0]['info'] = t('Weibo Sharebutton'); 
+		$blocks[0]['cache'] = BLOCK_NO_CACHE;
+		return $blocks;	
+		break;
+
+	    case 'view':
+	      if (user_access('view weibo sharebutton')) {
+	        $settings = variable_get('weibo_sharebutton_block_settings', $default);
+	        $block['content'] = theme('weibo_sharebutton', $settings);
+	        return $block;
+	      }
+	      break;
+	    case 'configure':
+	      $form = array();
+	      if ($delta == 0) {
+	        $settings = variable_get('weibo_sharebutton_block_settings', $default);
+	        $available_sizes = array(
+			    '3' => t('Small'),
+			    '2' => t('Medium'),
+			    '1' => t('Large'),
+	        );
+			$available_icons = array(
+			    '1' => t('Icon'),
+			    '2' => t('Button'),
+	        );
+	        $form['wb_sharebtn'] = array(
+	          '#type' => 'fieldset',
+	          '#title' => t('Button Settings'),
+	          '#description' => t('Notice that these settings are exclusive for this block and they cover the basic options. The rest of settings will be taken from the <a href="@sett">general settings</a>.', array('@sett' => url('admin/structure/block'))),
+	        );
+	        $form['wb_sharebtn']['weibo_sharebutton_block_url'] = array(
+	          '#title' => t('Absolute URL to use for Weibo Share button'),
+	          '#type' => 'textfield',
+	          '#default_value' => $settings['url'],
+	          '#description' => t('Including the <em>http://</em> part. Leave empty to use your frontpage ($base_url).'),
+	        );
+	        $form['wb_sharebtn']['weibo_sharebutton_block_count'] = array(
+	          '#type' => 'radios',
+	          '#title' => t('Include count?'),
+	          '#options' => array(t('Yes'), t('No')),
+	          '#default_value' => $settings['count'],
+	        );
+	        $form['wb_sharebtn']['weibo_sharebutton_block_size'] = array(
+	          '#type' => 'radios',
+	          '#title' => t('Size'),
+	          '#options' => $available_sizes,
+	          '#default_value' => $settings['size'],
+	        );
+		  $form['wb_sharebtn']['weibo_sharebutton_block_icontype']= array(
+		    '#type' => 'radios',
+		    '#title' => t('Icon or Button Display?'),
+		    '#options' => $available_icons,
+		    '#default_value' => $settings['icontype'],
+			  );
+	        $form['wb_sharebtn']['weibo_sharebutton_block_wrapper_css'] = array(
+	          '#type' => 'textfield',
+	          '#title' => t('Optional wrapper with CSS'),
+	          '#maxlength' => 256,
+	          '#default_value' => $settings['css'],
+	          '#description' => t('To help with the layout and placement of the button, it will be rendered by default inside a wrapper: 	&lt;div class="wb_sharebutton"&gt;	&lt;/div&gt;<br/>You can enter CSS rules to style this wrapper. By default <em>text-align:center</em><br />To disable totally the wrapper, input the word <em>nowrapper</em>'),
+	        );
+	      }
+	      return $form;
+		case 'save':
+	      if ($delta == 0) {
+	        module_load_include('inc', 'weibo_sharebutton', 'weibo_sharebutton.admin');
+	        $settings = array(
+			  'icontype' => $edit['weibo_sharebutton_block_icontype'],
+	          'url' => $edit['weibo_sharebutton_block_url'],
+	          'count' => $edit['weibo_sharebutton_block_count'],
+	          'size' => $edit['weibo_sharebutton_block_size'],
+	          'css' => weibo_sharebutton_trim($edit['weibo_sharebutton_block_wrapper_css'], ';'),
+	        );
+	        variable_set('weibo_sharebutton_block_settings', $settings);
+	      }
+
+	}
+}
 
 

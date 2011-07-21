@@ -1,0 +1,12 @@
+Weibo 新浪微波 (http://open.weibo.com/)
+provides several services, including:
+1.) Weibo Share Button / 分享按钮 (http://open.weibo.com/sharebutton)
+     -Similar functionality to Twitter's Tweet Button
+2.) Weibo Connect / 微博连接 (http://open.weibo.com/connect)
+    -Account login via Weibo (用微博帐号登录网站)
+    -example implementation (without Drupal!): http://service.zol.com.cn/user/login.php
+   -Twitter's explanation of their OAuth Sign-In: https://dev.twitter.com/docs/auth/sign-in-with-twitter
+
+3.) Widgets / 微博组件 (http://open.weibo.com/widgets)
+=============================
+
