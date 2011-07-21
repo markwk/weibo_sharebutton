@@ -1,0 +1,5 @@
+; $Id$
+name = Sina Weibo Share Button
+description = Adds a configurable <em>Share</em> button for Sina Weibo to each selected node type, as well as a configurable block with a <em>Like</em> box in it.
+core = 6.x
+package = Share
