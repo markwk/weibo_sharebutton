@@ -53,10 +53,14 @@ function weibo_sharebutton_admin_settings() {
 	    '2' => t('Medium'),
 	    '1' => t('Large'),
 	  );
+	  $available_icons = array(
+	    '3' => t('Button'),
+	    '0' => t('Icon'),
+	  );
 	  $default = array(
-		'icontype' => 'icon',
+		'icontype' => '0',
 	    'count' => 0,
-	    'size' => '1',  // standard
+	    'size' => 1,  // standard
 	    'css' => 'margin: 0 1em 1em 1em;float:right',
 	  );
 	  $button_settings = variable_get('weibo_sharebutton_button_settings', $default);
@@ -68,7 +72,7 @@ function weibo_sharebutton_admin_settings() {
 	  $form['weibo_sharebutton_button_settings']['icontype'] = array(
 	    '#type' => 'radios',
 	    '#title' => t('Icon or Button Display?'),
-	    '#options' => array(t('Icon'), t('Button')),
+	    '#options' => $available_icons,
 	    '#default_value' => $button_settings['icontype'],
 		  );
 	  $form['weibo_sharebutton_button_settings']['count'] = array(

@@ -126,15 +126,32 @@ function weibo_sharebutton_link($type, $node = NULL, $teaser = FALSE) {
  * @ingroup themeable
  */
 function theme_weibo_sharebutton_button($variables) {
-	$weibo_buttontype = 1;
-	$weibo_count = '1';
+	global $base_url;
+
+	  // URL negotiation, with 2 fallbacks
+	  $node = $variables['node'];
+	  if (!empty($node) && isset($node->nid)) {
+	    $url = url('node/' . $node->nid, array('absolute' => TRUE));
+	  }
+	  elseif (!empty($variables['url'])) {
+	    $url = check_url($variables['url']);
+	  }
+	  else {
+	    $url = $base_url;
+	  }
+
+	// How do get variables to these variables?
+	$count = 1;
+	$size = 1;
+	$icontype = 0; // [weibo_sharebutton_button_settings][icontype]
+	$weibo_button = $icontype + $size;
 	
 	$output = "<script type=\"text/javascript\" charset=\"utf-8\"> \n";
 	$output .= "(function(){ \n";
 	$output .= "var param = { \n";
 	$output .= "url:location.href, \n";
-	$output .= "type:'$weibo_buttontype', \n";
-	$output .= "count:'$weibo_count', \n";
+	$output .= "type:'$weibo_button', \n";
+	$output .= "count:'$count', \n";
 	$output .= "rnd:new Date().valueOf() \n";
 	$output .= "} \n";
 	$output .= "var temp = []; \n";
@@ -145,7 +162,14 @@ function theme_weibo_sharebutton_button($variables) {
 	$output .= "})() \n";		
 	$output .= "</script>";	
 
-  return $output;
+    $button = $output;
+
+	// Wrap it and serve it
+	  if ($variables['css'] !== 'nowrapper') {
+	    $css =   empty($variables['css'])   ? '' : 'style="' .  check_plain($variables['css']) . '"';
+	    $button = '<div class="weibo_sharebutton-wrapper" '. $css . ' >' . $button . '</div>';
+	  }
+	  return $button;
 }
 
 /**
