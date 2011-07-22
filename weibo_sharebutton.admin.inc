@@ -78,7 +78,7 @@ function weibo_sharebutton_admin_settings() {
 	  $form['weibo_sharebutton_button_settings']['count'] = array(
 	    '#type' => 'radios',
 	    '#title' => t('Include count?'),
-	    '#options' => array(t('Yes'), t('No')),
+	    '#options' => array(t('No'), t('Yes')),
 	    '#default_value' => $button_settings['count'],
 	  );
 	  $form['weibo_sharebutton_button_settings']['size'] = array(
