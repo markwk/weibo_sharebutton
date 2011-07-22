@@ -174,96 +174,22 @@ function theme_weibo_sharebutton_button($variables) {
 
 /**
  * Implements hook_block_info().
+ * @Todo: Add configuration
  */
-
 function weibo_sharebutton_block($op = 'list', $delta = 0, $edit = array()) {
-  $default = array(
-	'icontype' => 'icon',
-    'url' => '',
-    'count' => 0,
-    'size' => '1',  // standard
-    'css' => 'text-align:center;',
-  );
-	
-	switch ($op) {
-		case 'list': 
-		$blocks[0]['info'] = t('Weibo Sharebutton'); 
-		$blocks[0]['cache'] = BLOCK_NO_CACHE;
-		return $blocks;	
-		break;
 
-	    case 'view':
-	      if (user_access('view weibo sharebutton')) {
-	        $settings = variable_get('weibo_sharebutton_block_settings', $default);
-	        $block['content'] = theme('weibo_sharebutton', $settings);
-	        return $block;
-	      }
-	      break;
-	    case 'configure':
-	      $form = array();
-	      if ($delta == 0) {
-	        $settings = variable_get('weibo_sharebutton_block_settings', $default);
-	        $available_sizes = array(
-			    '3' => t('Small'),
-			    '2' => t('Medium'),
-			    '1' => t('Large'),
-	        );
-			$available_icons = array(
-			    '1' => t('Icon'),
-			    '2' => t('Button'),
-	        );
-	        $form['wb_sharebtn'] = array(
-	          '#type' => 'fieldset',
-	          '#title' => t('Button Settings'),
-	          '#description' => t('Notice that these settings are exclusive for this block and they cover the basic options. The rest of settings will be taken from the <a href="@sett">general settings</a>.', array('@sett' => url('admin/structure/block'))),
-	        );
-	        $form['wb_sharebtn']['weibo_sharebutton_block_url'] = array(
-	          '#title' => t('Absolute URL to use for Weibo Share button'),
-	          '#type' => 'textfield',
-	          '#default_value' => $settings['url'],
-	          '#description' => t('Including the <em>http://</em> part. Leave empty to use your frontpage ($base_url).'),
-	        );
-	        $form['wb_sharebtn']['weibo_sharebutton_block_count'] = array(
-	          '#type' => 'radios',
-	          '#title' => t('Include count?'),
-	          '#options' => array(t('Yes'), t('No')),
-	          '#default_value' => $settings['count'],
-	        );
-	        $form['wb_sharebtn']['weibo_sharebutton_block_size'] = array(
-	          '#type' => 'radios',
-	          '#title' => t('Size'),
-	          '#options' => $available_sizes,
-	          '#default_value' => $settings['size'],
-	        );
-		  $form['wb_sharebtn']['weibo_sharebutton_block_icontype']= array(
-		    '#type' => 'radios',
-		    '#title' => t('Icon or Button Display?'),
-		    '#options' => $available_icons,
-		    '#default_value' => $settings['icontype'],
-			  );
-	        $form['wb_sharebtn']['weibo_sharebutton_block_wrapper_css'] = array(
-	          '#type' => 'textfield',
-	          '#title' => t('Optional wrapper with CSS'),
-	          '#maxlength' => 256,
-	          '#default_value' => $settings['css'],
-	          '#description' => t('To help with the layout and placement of the button, it will be rendered by default inside a wrapper: 	&lt;div class="wb_sharebutton"&gt;	&lt;/div&gt;<br/>You can enter CSS rules to style this wrapper. By default <em>text-align:center</em><br />To disable totally the wrapper, input the word <em>nowrapper</em>'),
-	        );
-	      }
-	      return $form;
-		case 'save':
-	      if ($delta == 0) {
-	        module_load_include('inc', 'weibo_sharebutton', 'weibo_sharebutton.admin');
-	        $settings = array(
-			  'icontype' => $edit['weibo_sharebutton_block_icontype'],
-	          'url' => $edit['weibo_sharebutton_block_url'],
-	          'count' => $edit['weibo_sharebutton_block_count'],
-	          'size' => $edit['weibo_sharebutton_block_size'],
-	          'css' => weibo_sharebutton_trim($edit['weibo_sharebutton_block_wrapper_css'], ';'),
-	        );
-	        variable_set('weibo_sharebutton_block_settings', $settings);
-	      }
-
-	}
 }
 
+/**
+ * A block content function.
+ * @Todo: Implement Block contents
+ */
+function weibo_sharebutton_block_contents($which_block) {
+	
+}
 
+/**
+ * @} End of "Weibo Sharebutton Module".
+ */
+
+ 
