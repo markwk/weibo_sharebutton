@@ -22,6 +22,7 @@ function weibo_sharebutton_uninstall() {
   variable_del('weibo_sharebutton_node_types');
   variable_del('weibo_sharebutton_node_location');
   variable_del('weibo_sharebutton_weight');
+  variable_del('weibo_sharebutton_appkey');
   variable_del('weibo_sharebutton_showonteasers');
   variable_del('weibo_sharebutton_block_settings');
   variable_del('weibo_sharebutton_button_settings');

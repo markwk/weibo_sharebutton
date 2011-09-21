@@ -25,6 +25,14 @@ function weibo_sharebutton_admin_settings() {
 	    '#title' => t('Display Settings'),
 	    '#description' => t('These are settings for nodes: the button will be created dynamically for each node using its URL. <br />On the other hand, if you only need a block with a fixed URL like your homepage, go to the <a href="@blocks">blocks</a> page to enable and configure the <em>Weibo Share Button</em> block.', array('@blocks' => url('admin/build/block'))),
 	  );
+
+	  $form['display']['weibo_sharebutton_appkey'] = array(
+	    '#type' => 'textfield',
+	    '#title' => t('Sina Weibo App Key'),
+	    '#maxlength' => 256,
+	    '#default_value' => variable_get('weibo_sharebutton_appkey', ''),
+	    '#description' => t('You can get Sina Weibo App Key at <a href="http://open.sina.com">Open Sina</a>.'),
+	  );
 	
 	$form['display']['weibo_sharebutton_node_types'] = array(
 	    '#type' => 'checkboxes',
@@ -93,7 +101,7 @@ function weibo_sharebutton_admin_settings() {
 	    '#maxlength' => 256,
 	    '#default_value' => $button_settings['css'],
 	    '#description' => t('To help with the layout and placement of the button, it will be rendered by default inside a wrapper: <br />	&lt;div class="wb_sharebutton-wrapper"&gt;	&lt;/div&gt;<br/>You can enter CSS rules to style this wrapper. By default <em>margin: 0 1em 1em 1em;float:right</em><br />To disable totally the wrapper, input the word <em>nowrapper</em>'),
-	  );
+	  );	
 	  return system_settings_form($form);
 }
 

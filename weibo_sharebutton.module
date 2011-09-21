@@ -140,6 +140,7 @@ function theme_weibo_sharebutton_button($variables) {
 	    $url = $base_url;
 	  }
 
+	$appkey = variable_get('weibo_sharebutton_appkey', '');
 	$syntax = $variables['syntax'];
 	$count = $variables['count'];
 	$size = $variables['size'];
@@ -166,6 +167,7 @@ function theme_weibo_sharebutton_button($variables) {
 	$output .= "url:location.href, \n";
 	$output .= "type:'$weibo_btn', \n";
 	$output .= "count:'$count', \n";
+	$output .= "appkey:'$appkey', \n"; 
 	$output .= "rnd:new Date().valueOf() \n";
 	$output .= "} \n";
 	$output .= "var temp = []; \n";
