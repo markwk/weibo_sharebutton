@@ -11,7 +11,7 @@
 function weibo_sharebutton_enable() {
   $node_types = variable_get('weibo_sharebutton_node_types', array());
   if (empty($node_types)) {
-    drupal_set_message(t('To finish enabling Weibo Share button in your nodes, visit the <a href="@settings">settings</a> page. And remember to check the <a href="@perm">permissions</a> to view the button.', array('@settings' => url('admin/settings/weibo-sharebutton'), '@perm' => url('admin/user/permissions', array('fragment' => 'module-weibo_sharebutton')))));
+    drupal_set_message(t('To finish enabling Weibo Share button in your nodes, visit the <a href="@settings">settings</a> page. And remember to check the <a href="@perm">permissions</a> to view the button.', array('@settings' => url('admin/config/services/weibo-sharebutton'), '@perm' => url('admin/user/permissions', array('fragment' => 'module-weibo_sharebutton')))));
   }
 }
 

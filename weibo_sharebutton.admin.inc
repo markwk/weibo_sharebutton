@@ -12,13 +12,13 @@
  */
 function weibo_sharebutton_admin_settings() {
 	$script = '';
-	drupal_set_html_head('');
 	
-	$locations = array(
-		'full' => t('Full node'),
-	    'teaser' => t('Teaser'),
-	    'link' => t('Node links'),
-	  );
+  $locations = array();
+  $entity_info = entity_get_info('node');
+  $view_modes = $entity_info['view modes'];
+  foreach ($view_modes as $name => $info) {
+    $locations[$name] = $info['label'];
+  }
 
 	$form['display'] = array(
 	    '#type' => 'fieldset',
@@ -37,14 +37,14 @@ function weibo_sharebutton_admin_settings() {
 	$form['display']['weibo_sharebutton_node_types'] = array(
 	    '#type' => 'checkboxes',
 	    '#title' => t('Display the button on these content types:'),
-	    '#options' => node_get_types('names'),
+	    '#options' => node_type_get_names(),
 	    '#default_value' => variable_get('weibo_sharebutton_node_types', array()),
 	  );
 
 	  $form['display']['weibo_sharebutton_node_location'] = array(
 	    '#type' => 'checkboxes',
 	    '#title' => t('Display the button in these view modes:'),
-	    '#options' => $locations,
+	    '#options' => $locations + array('link' => t('Node links')),
 	    '#default_value' => variable_get('weibo_sharebutton_node_location', array('full')),
 	  );
 
