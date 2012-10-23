@@ -10,7 +10,7 @@
  *
  * @ingroup forms
  */
-function weibo_sharebutton_admin_settings() {
+function weibo_sharebutton_page_admin_settings() {
 	$script = '';
 	
   $locations = array();
@@ -105,10 +105,80 @@ function weibo_sharebutton_admin_settings() {
 	  return system_settings_form($form);
 }
 
+
+
+function weibo_sharebutton_block_admin_settings() {
+
+	$form['display'] = array(
+	    '#type' => 'fieldset',
+	    '#title' => t('Display Settings'),
+	    '#description' => t('These are settings for the block. To use the block, go to the <a href="@blocks">blocks</a> page to enable and configure the <em>Weibo Share Button</em> block.', array('@blocks' => url('admin/structure/block'))),
+	  );
+
+	  $form['display']['weibo_sharebutton_appkey'] = array(
+	    '#type' => 'textfield',
+	    '#title' => t('Sina Weibo App Key'),
+	    '#maxlength' => 256,
+	    '#default_value' => variable_get('weibo_sharebutton_appkey', ''),
+	    '#description' => t('You can get Sina Weibo App Key at <a href="http://open.sina.com">Open Sina</a>.'),
+	  );
+	  $available_sizes = array(
+	    '3' => t('Small'),
+	    '2' => t('Medium'),
+	    '1' => t('Large'),
+	  );
+	  $available_icons = array(
+	    '3' => t('Button'),
+	    '0' => t('Icon'),
+	  );
+	  $default = array(
+		'icontype_block' => '0',
+	    'count_block' => 0,
+	    'size_block' => 1,  // standard
+	    'css_block' => 'margin: 0 1em 1em 1em;float:right',
+	  );
+
+	  $button_settings = variable_get('weibo_sharebutton_block_button_settings', $default);
+
+	  $form['weibo_sharebutton_block_button_settings'] = array(
+	    '#type' => 'fieldset',
+	    '#title' => t('Button Settings'),
+	    '#tree' => TRUE, // All the options in this fieldset will be grouped in 1 single variable.
+	  );
+	  $form['weibo_sharebutton_block_button_settings']['icontype_block'] = array(
+	    '#type' => 'radios',
+	    '#title' => t('Icon or Button Display?'),
+	    '#options' => $available_icons,
+	    '#default_value' => $button_settings['icontype_block'],
+		  );
+	  $form['weibo_sharebutton_block_button_settings']['count_block'] = array(
+	    '#type' => 'radios',
+	    '#title' => t('Include count?'),
+	    '#options' => array(t('No'), t('Yes')),
+	    '#default_value' => $button_settings['count_block'],
+	  );
+	  $form['weibo_sharebutton_block_button_settings']['size_block'] = array(
+	    '#type' => 'radios',
+	    '#title' => t('Size'),
+	    '#options' => $available_sizes,
+	    '#default_value' => $button_settings['size_block'],
+	  );
+	  $form['weibo_sharebutton_block_button_settings']['css_block'] = array(
+	    '#type' => 'textfield',
+	    '#title' => t('Optional wrapper with CSS'),
+	    '#maxlength' => 256,
+	    '#default_value' => $button_settings['css_block'],
+	    '#description' => t('To help with the layout and placement of the button, it will be rendered by default inside a wrapper: <br />	&lt;div class="wb_sharebutton-wrapper"&gt;	&lt;/div&gt;<br/>You can enter CSS rules to style this wrapper. By default <em>margin: 0 1em 1em 1em;float:right</em><br />To disable totally the wrapper, input the word <em>nowrapper</em>'),
+	  );	
+	  return system_settings_form($form);
+}
+
+
+
 /*
  * Trim and polish text input fields
 */
-function weibo_sharebutton_admin_settings_validate($form, &$form_state) {
+function weibo_sharebutton_page_admin_settings_validate($form, &$form_state) {
 	  $form_state['values']['weibo_sharebutton_button_settings']['css'] = weibo_sharebutton_trim($form_state['values']['weibo_sharebutton_button_settings']['css'], ';');
 	}
 
